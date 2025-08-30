@@ -1,0 +1,47 @@
+{
+  "name": "logistics-drone-simulation",
+  "version": "1.0.0",
+  "description": "Simulador de entregas por drone para processo seletivo DTI Digital",
+  "main": "src/js/main.js",
+  "scripts": {
+    "start": "npx http-server . -p 3000",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "dev": "npx live-server ."
+  },
+  "keywords": [
+    "drone",
+    "logistics",
+    "simulation",
+    "dti-digital",
+    "javascript"
+  ],
+  "author": "Candidato DTI Digital",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^3.9.1",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/js/main.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  }
+}
