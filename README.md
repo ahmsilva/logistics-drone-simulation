@@ -1,36 +1,36 @@
-# 🚁 Simulador de Entregas por Drone - DTI Digital
+#  Simulador de Entregas por Drone - DTI Digital
 
 ## Descrição do Projeto
 Sistema web interativo que simula operações de entrega por drones urbanos, desenvolvido como desafio técnico para o processo seletivo da DTI Digital. O sistema gerencia drones, pedidos de entrega e otimiza rotas respeitando regras de capacidade, distância e prioridade.
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Bibliotecas**: Chart.js (para dashboards), Leaflet.js (mapas interativos)
 - **Testes**: Jest para testes unitários
 - **Arquitetura**: MVC Pattern com Classes ES6
 
-## 📋 Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### Funcionalidades Básicas
-- ✅ **Gestão de Drones**: Cadastro, capacidade de peso e alcance
-- ✅ **Sistema de Pedidos**: Localização, peso, prioridade (alta, média, baixa)
-- ✅ **Algoritmo de Alocação**: Otimização inteligente baseada em múltiplos critérios
-- ✅ **Simulação em Tempo Real**: Estados do drone (idle, carregando, voando, entregando, retornando)
+-  **Gestão de Drones**: Cadastro, capacidade de peso e alcance
+-  **Sistema de Pedidos**: Localização, peso, prioridade (alta, média, baixa)
+-  **Algoritmo de Alocação**: Otimização inteligente baseada em múltiplos critérios
+-  **Simulação em Tempo Real**: Estados do drone (idle, carregando, voando, entregando, retornando)
 
 ### Funcionalidades Avançadas
-- ✅ **Sistema de Bateria**: Gestão automática de recarga
-- ✅ **Zonas de Exclusão**: Obstáculos e restrições de voo
-- ✅ **Fila de Prioridade**: Ordenação inteligente por prioridade e tempo
-- ✅ **Cálculo de Tempo**: Estimativa precisa de entregas
+-  **Sistema de Bateria**: Gestão automática de recarga
+-  **Zonas de Exclusão**: Obstáculos e restrições de voo
+-  **Fila de Prioridade**: Ordenação inteligente por prioridade e tempo
+-  **Cálculo de Tempo**: Estimativa precisa de entregas
 
 ### Diferenciais
-- ✅ **Dashboard Interativo**: Relatórios em tempo real com gráficos
-- ✅ **Mapa Visual**: Visualização de rotas e posições
-- ✅ **API REST Simulada**: Endpoints para integração externa
-- ✅ **Feedback do Cliente**: Status de entrega em tempo real
-- ✅ **Sistema de Notificações**: Alertas de estado e problemas
+-  **Dashboard Interativo**: Relatórios em tempo real com gráficos
+-  **Mapa Visual**: Visualização de rotas e posições
+-  **API REST Simulada**: Endpoints para integração externa
+-  **Feedback do Cliente**: Status de entrega em tempo real
+-  **Sistema de Notificações**: Alertas de estado e problemas
 
-## 🏗️ Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 logistics-drone-simulation/
@@ -230,15 +230,10 @@ GET  /api/routes        # Calcular rotas
 
 ## 👨‍💻 Desenvolvedor
 
-**Nome**: [Seu Nome]
-**Email**: [seu.email@exemplo.com]
-**LinkedIn**: [linkedin.com/in/seu-perfil]
-**GitHub**: [github.com/seu-usuario]
-
-## 📄 Licença
-
-Este projeto foi desenvolvido como parte do processo seletivo da DTI Digital.
-
+**Nome**: André Henrique
+**Email**: andre.henri2004@gmail.com
+**LinkedIn**: (https://www.linkedin.com/in/andrehenri-ti/)
+**GitHub**: (https://github.com/ahmsilva)
 ---
 
 *Desenvolvido com ❤️ para o desafio técnico DTI Digital - Enterprise Hakuna*
