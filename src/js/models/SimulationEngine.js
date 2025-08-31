@@ -141,6 +141,22 @@ class SimulationEngine {
         // Process pending orders
         this.processOrderQueue();
 
+        // Check for completed deliveries and move them
+        const completedOrderIds = [];
+        for (const [orderId, order] of this.orders) {
+            if (order.status === 'delivered') {
+                this.completedOrders.push(order);
+                completedOrderIds.push(orderId);
+                this.logEvent(`Pedido ${order.id} entregue com sucesso para ${order.customerName}`, 'success');
+                this.emit('deliveryCompleted', { order });
+            }
+        }
+        
+        // Remove completed orders from active orders
+        completedOrderIds.forEach(orderId => {
+            this.orders.delete(orderId);
+        });
+
         // Update statistics
         this.updateStatistics();
 
@@ -579,9 +595,27 @@ class SimulationEngine {
         
         this.logEvent('Dados importados com sucesso', 'success');
     }
+
+    /**
+     * Handle delivery completion
+     * @param {Order} order - Completed order
+     */
+    handleDeliveryCompletion(order) {
+        // Move to completed orders
+        this.completedOrders.push(order);
+        this.orders.delete(order.id);
+        
+        this.logEvent(`Pedido ${order.id} entregue com sucesso para ${order.customerName}`, 'success');
+        this.emit('deliveryCompleted', { order });
+    }
 }
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SimulationEngine;
+}
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.SimulationEngine = SimulationEngine;
 }

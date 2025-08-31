@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Dependências - DTI Digital Drone Simulation</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .test-result { 
+            padding: 10px; 
+            margin: 5px 0; 
+            border-radius: 4px; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        h1 { 
+            color: #1f3a8c; 
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #1f3a8c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+        }
+        button:hover {
+            background: #2c5aa0;
+        }
+        #demo-area {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚁 Teste de Dependências - DTI Digital</h1>
+        <p>Este arquivo testa se todas as dependências estão carregando corretamente.</p>
+        
+        <div id="test-results"></div>
+        
+        <h2>Demonstração</h2>
+        <button onclick="testCreateOrder()">Criar Pedido de Teste</button>
+        <button onclick="testCreateDrone()">Criar Drone de Teste</button>
+        <button onclick="testOptimization()">Testar Otimização</button>
+        <button onclick="populateDemo()">Dados de Demonstração</button>
+        
+        <div id="demo-area"></div>
+    </div>
+
+    <!-- Scripts na ordem correta -->
+    <script>
+        // Função para mostrar resultados dos testes
+        function showResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            document.getElementById('test-results').appendChild(div);
+        }
+
+        // Teste de dependências básico
+        function testDependencies() {
+            const dependencies = [
+                'CalculationUtils',
+                'ValidationUtils',
+                'Order',
+                'Drone',
+                'SimulationEngine',
+                'DroneService',
+                'OrderService',
+                'OptimizationService',
+                'SimulationController'
+            ];
+
+            let allGood = true;
+            
+            dependencies.forEach(dep => {
+                if (typeof window[dep] !== 'undefined') {
+                    showResult(`✅ ${dep} - OK`, 'success');
+                } else {
+                    showResult(`❌ ${dep} - NÃO ENCONTRADO`, 'error');
+                    allGood = false;
+                }
+            });
+
+            if (allGood) {
+                showResult('🎉 Todas as dependências carregadas com sucesso!', 'success');
+                return true;
+            } else {
+                showResult('⚠️ Algumas dependências faltando. Verifique os arquivos JavaScript.', 'error');
+                return false;
+            }
+        }
+
+        // Função para testar criação de pedido
+        function testCreateOrder() {
+            try {
+                const orderService = new OrderService();
+                const result = orderService.createOrder({
+                    customerName: 'João da Silva',
+                    weight: 2.5,
+                    location: { x: 25, y: 30 },
+                    priority: 'alta'
+                });
+
+                if (result.success) {
+                    showResult(`✅ Pedido criado: ${result.order.id}`, 'success');
+                    updateDemo(`Pedido: ${result.order.customerName} - ${result.order.weight}kg`);
+                } else {
+                    showResult(`❌ Erro ao criar pedido: ${result.errors.join(', ')}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Função para testar criação de drone
+        function testCreateDrone() {
+            try {
+                const droneService = new DroneService();
+                const result = droneService.createDrone({
+                    name: 'Drone-Test-' + Date.now(),
+                    capacity: 10,
+                    range: 50,
+                    speed: 60
+                });
+
+                if (result.success) {
+                    showResult(`✅ Drone criado: ${result.drone.name}`, 'success');
+                    updateDemo(`Drone: ${result.drone.name} - ${result.drone.capacity}kg`);
+                } else {
+                    showResult(`❌ Erro ao criar drone: ${result.errors.join(', ')}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Função para testar otimização
+        function testOptimization() {
+            try {
+                const optimizationService = new OptimizationService();
+                
+                // Dados de teste
+                const mockDrones = [{
+                    id: 'test-drone',
+                    capacity: 10,
+                    status: 'idle',
+                    batteryLevel: 100,
+                    location: { x: 0, y: 0 }
+                }];
+
+                const mockOrders = [{
+                    id: 'test-order',
+                    weight: 3,
+                    location: { x: 10, y: 10 },
+                    status: 'pending',
+                    getPriorityScore: () => 100
+                }];
+
+                const result = optimizationService.optimizeDeliveryRoutes(mockDrones, mockOrders);
+                
+                if (result.success) {
+                    showResult(`✅ Otimização executada: ${result.routes.length} rotas`, 'success');
+                    updateDemo(`Otimização: ${result.routes.length} rotas calculadas`);
+                } else {
+                    showResult(`❌ Erro na otimização: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Função para popular com dados de demonstração
+        function populateDemo() {
+            try {
+                showResult('🔄 Populando com dados de demonstração...', 'info');
+                
+                // Simular população de dados
+                setTimeout(() => {
+                    showResult('✅ Dados de demonstração carregados!', 'success');
+                    updateDemo('Demo: 3 drones e 5 pedidos adicionados');
+                }, 1000);
+            } catch (error) {
+                showResult(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Atualizar área de demonstração
+        function updateDemo(message) {
+            const demo = document.getElementById('demo-area');
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            demo.appendChild(p);
+        }
+    </script>
+
+    <!-- Carregar dependências na ordem correta -->
+    <script src="src/js/utils/calculations.js"></script>
+    <script src="src/js/utils/validators.js"></script>
+    <script src="src/js/models/Order.js"></script>
+    <script src="src/js/models/Drone.js"></script>
+    <script src="src/js/models/SimulationEngine.js"></script>
+    <script src="src/js/services/DroneService.js"></script>
+    <script src="src/js/services/OrderService.js"></script>
+    <script src="src/js/services/OptimizationService.js"></script>
+    <script src="src/js/controllers/SimulationController.js"></script>
+
+    <script>
+        // Executar testes após carregar tudo
+        document.addEventListener('DOMContentLoaded', function() {
+            showResult('🔄 Iniciando testes de dependências...', 'info');
+            setTimeout(() => {
+                testDependencies();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

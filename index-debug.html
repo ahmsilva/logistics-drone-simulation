@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚁 Debug - Simulador de Entregas por Drone - DTI Digital</title>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/dashboard.css">
+    <style>
+        /* Debug styles */
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 10000;
+        }
+        .debug-status {
+            margin: 5px 0;
+        }
+        .debug-success { color: #28a745; }
+        .debug-error { color: #dc3545; }
+        .debug-warning { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <!-- Debug Panel -->
+    <div class="debug-panel">
+        <div><strong>🔍 DEBUG MODE</strong></div>
+        <div id="debug-status" class="debug-status">Inicializando...</div>
+        <div id="debug-deps" class="debug-status"></div>
+        <div id="debug-controller" class="debug-status"></div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-drone"></i>
+                <h1>DroneLogistics <span style="font-size:0.5em;color:#ffc107;">(DEBUG)</span></h1>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-btn" data-tab="orders">Pedidos</button>
+                <button class="nav-btn" data-tab="drones">Drones</button>
+                <button class="nav-btn" data-tab="simulation">Simulação</button>
+                <button class="nav-btn" data-tab="reports">Relatórios</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Dashboard Tab (simplificado para debug) -->
+        <div id="dashboard" class="tab-content active">
+            <div class="container">
+                <h2>🚁 Dashboard Debug - DTI Digital</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="total-deliveries">0</h3>
+                            <p>Entregas Realizadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="active-drones">0</h3>
+                            <p>Drones Ativos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="pending-orders">0</h3>
+                            <p>Pedidos Pendentes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="sim-time">00:00:00</h3>
+                            <p>Tempo de Simulação</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>🎮 Controles de Debug</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="testDependencies()" class="btn btn-secondary">🔍 Testar Dependências</button>
+                            <button onclick="setupDemo()" class="btn btn-primary">🎯 Setup Demo</button>
+                            <button onclick="startSim()" class="btn btn-success">▶️ Iniciar</button>
+                            <button onclick="pauseSim()" class="btn btn-warning">⏸️ Pausar</button>
+                            <button onclick="stopSim()" class="btn btn-danger">⏹️ Parar</button>
+                            <button onclick="resetSim()" class="btn btn-secondary">🔄 Reset</button>
+                            <button onclick="showDebugInfo()" class="btn btn-info">📊 Info</button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>📝 Log de Debug</h3>
+                        <div id="debug-log" style="background: #f8f9fa; padding: 10px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simplified other tabs for debug -->
+        <div id="orders" class="tab-content">
+            <div class="container">
+                <h2>Pedidos (Debug)</h2>
+                <p>Seção simplificada para debug</p>
+            </div>
+        </div>
+
+        <div id="drones" class="tab-content">
+            <div class="container">
+                <h2>Drones (Debug)</h2>
+                <p>Seção simplificada para debug</p>
+            </div>
+        </div>
+
+        <div id="simulation" class="tab-content">
+            <div class="container">
+                <h2>Simulação (Debug)</h2>
+                <p>Seção simplificada para debug</p>
+            </div>
+        </div>
+
+        <div id="reports" class="tab-content">
+            <div class="container">
+                <h2>Relatórios (Debug)</h2>
+                <p>Seção simplificada para debug</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notification System -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- Scripts na ordem correta -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    
+    <script>
+        // Debug utilities
+        function debugLog(message, type = 'info') {
+            const log = document.getElementById('debug-log');
+            if (log) {
+                const time = new Date().toLocaleTimeString();
+                const entry = document.createElement('div');
+                entry.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : type === 'warning' ? 'orange' : 'black';
+                entry.textContent = `[${time}] ${message}`;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+            console.log(`[DEBUG] ${message}`);
+        }
+
+        function updateDebugPanel(deps, controller) {
+            document.getElementById('debug-deps').innerHTML = 
+                deps ? `<span class="debug-success">✅ Deps: ${deps.available}/${deps.total}</span>` : 
+                       '<span class="debug-error">❌ Deps não verificadas</span>';
+                       
+            document.getElementById('debug-controller').innerHTML = 
+                controller ? '<span class="debug-success">✅ Controller OK</span>' : 
+                            '<span class="debug-error">❌ Controller falhou</span>';
+        }
+
+        debugLog('Iniciando modo debug...');
+    </script>
+
+    <script src="src/js/utils/calculations.js"></script>
+    <script src="src/js/utils/validators.js"></script>
+    <script src="src/js/models/Order.js"></script>
+    <script src="src/js/models/Drone.js"></script>
+    <script src="src/js/models/SimulationEngine.js"></script>
+    <script src="src/js/services/DroneService.js"></script>
+    <script src="src/js/services/OrderService.js"></script>
+    <script src="src/js/services/OptimizationService.js"></script>
+    <script src="src/js/controllers/SimulationController.js"></script>
+    <script src="main-debug.js"></script>
+
+    <script>
+        // Debug functions
+        function testDependencies() {
+            debugLog('🔍 Testando dependências...');
+            const result = DroneSimulation.debug.checkDependencies();
+            updateDebugPanel(result, DroneSimulation.api.isReady());
+            debugLog(`Resultado: ${result.available.length}/${result.total} OK`, result.success ? 'success' : 'error');
+        }
+
+        function setupDemo() {
+            debugLog('🎯 Configurando demonstração...');
+            try {
+                DroneSimulation.demo.populateWithDemoData();
+                debugLog('✅ Demo configurada com sucesso', 'success');
+            } catch (error) {
+                debugLog(`❌ Erro no setup: ${error.message}`, 'error');
+            }
+        }
+
+        function startSim() {
+            debugLog('▶️ Iniciando simulação...');
+            const result = DroneSimulation.api.startSimulation();
+            debugLog(result.success ? '✅ Simulação iniciada' : `❌ Erro: ${result.error}`, result.success ? 'success' : 'error');
+        }
+
+        function pauseSim() {
+            debugLog('⏸️ Pausando simulação...');
+            const result = DroneSimulation.api.pauseSimulation();
+            debugLog(result.success ? '✅ Simulação pausada' : `❌ Erro: ${result.error}`, result.success ? 'success' : 'error');
+        }
+
+        function stopSim() {
+            debugLog('⏹️ Parando simulação...');
+            const result = DroneSimulation.api.stopSimulation();
+            debugLog(result.success ? '✅ Simulação parada' : `❌ Erro: ${result.error}`, result.success ? 'success' : 'error');
+        }
+
+        function resetSim() {
+            debugLog('🔄 Resetando simulação...');
+            try {
+                if (window.controller) {
+                    controller.resetSimulation();
+                    debugLog('✅ Simulação resetada', 'success');
+                } else {
+                    debugLog('❌ Controller não disponível', 'error');
+                }
+            } catch (error) {
+                debugLog(`❌ Erro no reset: ${error.message}`, 'error');
+            }
+        }
+
+        function showDebugInfo() {
+            debugLog('📊 Informações de debug:');
+            debugLog(`- Controller: ${DroneSimulation.api.isReady() ? 'OK' : 'FALHOU'}`);
+            
+            if (DroneSimulation.api.isReady()) {
+                const stats = DroneSimulation.api.getStatistics();
+                if (stats) {
+                    debugLog(`- Drones: ${stats.drones?.total || 0}`);
+                    debugLog(`- Pedidos: ${stats.orders?.total || 0}`);
+                    debugLog(`- Simulação rodando: ${stats.simulation?.isRunning || false}`);
+                }
+            }
+        }
+
+        // Auto-test on load
+        setTimeout(() => {
+            testDependencies();
+        }, 500);
+
+        // Simple stats updater
+        setInterval(() => {
+            if (DroneSimulation.api.isReady()) {
+                const state = DroneSimulation.api.getSimulationState();
+                if (state) {
+                    document.getElementById('total-deliveries').textContent = state.statistics.totalDeliveries;
+                    document.getElementById('active-drones').textContent = state.statistics.activeDrones;
+                    document.getElementById('pending-orders').textContent = state.statistics.pendingOrders;
+                    document.getElementById('sim-time').textContent = window.controller?.simulationEngine.getFormattedTime() || '00:00:00';
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

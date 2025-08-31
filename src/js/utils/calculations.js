@@ -300,3 +300,8 @@ class CalculationUtils {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CalculationUtils;
 }
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.CalculationUtils = CalculationUtils;
+}

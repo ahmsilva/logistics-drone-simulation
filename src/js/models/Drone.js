@@ -21,6 +21,7 @@ class Drone {
         this.currentRoute = [];
         this.routeIndex = 0;
         this.lastMaintenanceDate = new Date();
+        this.lastStatusChange = 0; // Simulation time when status last changed
         this.createdAt = new Date();
         this.updatedAt = new Date();
         
@@ -133,7 +134,7 @@ class Drone {
         const distance = this.getDistanceTo(currentTarget);
         const timeToReach = (distance / this.speed) * 60; // Convert to minutes
 
-        if (deltaTime >= timeToReach) {
+        if (deltaTime >= timeToReach || distance < 0.1) {
             // Reached target
             this.location = { ...currentTarget };
             this.routeIndex++;
@@ -158,12 +159,58 @@ class Drone {
     }
 
     /**
+     * Move drone towards base location
+     * @param {number} deltaTime - Time elapsed since last update
+     */
+    moveTowardsBase(deltaTime) {
+        const distance = this.getDistanceTo(this.baseLocation);
+        const timeToReach = (distance / this.speed) * 60; // Convert to minutes
+        
+        if (deltaTime >= timeToReach || distance < 0.1) {
+            // Reached base
+            this.location = { ...this.baseLocation };
+            
+            // Update battery and distance
+            const batteryConsumption = this.calculateBatteryConsumption(distance);
+            this.consumeBattery(batteryConsumption);
+            this.totalDistanceTraveled += distance;
+            
+            // Check what to do next
+            if (this.batteryLevel < 20) {
+                this.updateStatus('charging');
+            } else {
+                this.updateStatus('idle');
+            }
+        } else {
+            // Move towards base
+            const progress = deltaTime / timeToReach;
+            this.moveTowards(this.baseLocation, progress);
+        }
+    }
+
+    /**
+     * Charge battery over time
+     * @param {number} deltaTime - Time elapsed since last update
+     */
+    chargeBattery(deltaTime) {
+        const chargeRate = 10; // 10% per second for simulation
+        const chargeAmount = chargeRate * deltaTime;
+        
+        this.batteryLevel = Math.min(100, this.batteryLevel + chargeAmount);
+        
+        if (this.batteryLevel >= 100) {
+            this.updateStatus('idle');
+        }
+    }
+
+    /**
      * Handle reaching a delivery point
      */
     handleDeliveryPoint() {
         const currentPoint = this.currentRoute[this.routeIndex];
         const orderAtPoint = this.currentOrders.find(order => 
-            order.location.x === currentPoint.x && order.location.y === currentPoint.y
+            Math.abs(order.location.x - currentPoint.x) < 0.1 && 
+            Math.abs(order.location.y - currentPoint.y) < 0.1
         );
 
         if (orderAtPoint) {
@@ -173,10 +220,6 @@ class Drone {
             
             // Remove delivered order from current orders
             this.currentOrders = this.currentOrders.filter(order => order.id !== orderAtPoint.id);
-            
-            setTimeout(() => {
-                this.updateStatus('flying');
-            }, 3000); // 3 seconds delivery time
         }
     }
 
@@ -488,4 +531,9 @@ class Drone {
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = Drone;
+}
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.Drone = Drone;
 }

@@ -581,3 +581,8 @@ class DroneService {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = DroneService;
 }
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.DroneService = DroneService;
+}

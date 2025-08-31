@@ -437,3 +437,8 @@ class ValidationUtils {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ValidationUtils;
 }
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.ValidationUtils = ValidationUtils;
+}

@@ -329,3 +329,8 @@ class Order {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = Order;
 }
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.Order = Order;
+}

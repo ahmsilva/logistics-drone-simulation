@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>🔍 Debug de Dependências</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f0f0f0; }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        pre { background: white; padding: 15px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug de Dependências - DTI Digital</h1>
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+        }
+
+        // Interceptar erros JavaScript
+        window.addEventListener('error', function(e) {
+            log(`❌ ERRO JAVASCRIPT: ${e.message} em ${e.filename}:${e.lineno}`, 'error');
+        });
+
+        log('🔄 Iniciando debug...', 'info');
+    </script>
+
+    <!-- Carregar arquivos um por um para detectar onde está o erro -->
+    <script>
+        log('📝 Carregando CalculationUtils...', 'info');
+    </script>
+    <script src="src/js/utils/calculations.js"></script>
+    <script>
+        log(typeof CalculationUtils !== 'undefined' ? '✅ CalculationUtils OK' : '❌ CalculationUtils FALHOU', 
+            typeof CalculationUtils !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('📝 Carregando ValidationUtils...', 'info');
+    </script>
+    <script src="src/js/utils/validators.js"></script>
+    <script>
+        log(typeof ValidationUtils !== 'undefined' ? '✅ ValidationUtils OK' : '❌ ValidationUtils FALHOU', 
+            typeof ValidationUtils !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('📝 Carregando Order...', 'info');
+    </script>
+    <script src="src/js/models/Order.js"></script>
+    <script>
+        log(typeof Order !== 'undefined' ? '✅ Order OK' : '❌ Order FALHOU', 
+            typeof Order !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('📝 Carregando Drone...', 'info');
+    </script>
+    <script src="src/js/models/Drone.js"></script>
+    <script>
+        log(typeof Drone !== 'undefined' ? '✅ Drone OK' : '❌ Drone FALHOU', 
+            typeof Drone !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('📝 Carregando SimulationEngine...', 'info');
+    </script>
+    <script src="src/js/models/SimulationEngine.js"></script>
+    <script>
+        log(typeof SimulationEngine !== 'undefined' ? '✅ SimulationEngine OK' : '❌ SimulationEngine FALHOU', 
+            typeof SimulationEngine !== 'undefined' ? 'success' : 'error');
+            
+        // Teste de instanciação
+        if (typeof SimulationEngine !== 'undefined') {
+            try {
+                const engine = new SimulationEngine();
+                log('✅ SimulationEngine pode ser instanciado', 'success');
+            } catch (e) {
+                log(`❌ Erro ao instanciar SimulationEngine: ${e.message}`, 'error');
+            }
+        }
+    </script>
+
+    <script>
+        log('📝 Carregando serviços...', 'info');
+    </script>
+    <script src="src/js/services/DroneService.js"></script>
+    <script src="src/js/services/OrderService.js"></script>
+    <script src="src/js/services/OptimizationService.js"></script>
+    <script>
+        log(typeof DroneService !== 'undefined' ? '✅ DroneService OK' : '❌ DroneService FALHOU', 
+            typeof DroneService !== 'undefined' ? 'success' : 'error');
+        log(typeof OrderService !== 'undefined' ? '✅ OrderService OK' : '❌ OrderService FALHOU', 
+            typeof OrderService !== 'undefined' ? 'success' : 'error');
+        log(typeof OptimizationService !== 'undefined' ? '✅ OptimizationService OK' : '❌ OptimizationService FALHOU', 
+            typeof OptimizationService !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('📝 Carregando SimulationController...', 'info');
+    </script>
+    <script src="src/js/controllers/SimulationController.js"></script>
+    <script>
+        log(typeof SimulationController !== 'undefined' ? '✅ SimulationController OK' : '❌ SimulationController FALHOU', 
+            typeof SimulationController !== 'undefined' ? 'success' : 'error');
+    </script>
+
+    <script>
+        log('🎉 Debug concluído!', 'success');
+        log('📊 Resultado final:', 'warning');
+        
+        const classes = ['CalculationUtils', 'ValidationUtils', 'Order', 'Drone', 'SimulationEngine', 'DroneService', 'OrderService', 'OptimizationService', 'SimulationController'];
+        let success = 0;
+        
+        classes.forEach(cls => {
+            if (typeof window[cls] !== 'undefined') {
+                success++;
+                log(`✅ ${cls}`, 'success');
+            } else {
+                log(`❌ ${cls}`, 'error');
+            }
+        });
+        
+        log(`📈 Total: ${success}/${classes.length} classes carregadas`, success === classes.length ? 'success' : 'error');
+    </script>
+</body>
+</html>

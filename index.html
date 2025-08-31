@@ -111,29 +111,29 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="customer-name">Nome do Cliente</label>
-                                <input type="text" id="customer-name" required>
+                                <input type="text" id="customer-name" name="customer-name" required>
                             </div>
                             <div class="form-group">
                                 <label for="package-weight">Peso (kg)</label>
-                                <input type="number" id="package-weight" min="0.1" max="10" step="0.1" required>
+                                <input type="number" id="package-weight" name="package-weight" min="0.1" max="10" step="0.1" required>
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="delivery-x">Coordenada X</label>
-                                <input type="number" id="delivery-x" min="0" max="100" required>
+                                <input type="number" id="delivery-x" name="delivery-x" min="0" max="100" required>
                             </div>
                             <div class="form-group">
                                 <label for="delivery-y">Coordenada Y</label>
-                                <input type="number" id="delivery-y" min="0" max="100" required>
+                                <input type="number" id="delivery-y" name="delivery-y" min="0" max="100" required>
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="priority">Prioridade</label>
-                                <select id="priority" required>
+                                <select id="priority" name="priority" required>
                                     <option value="baixa">Baixa</option>
                                     <option value="media">Média</option>
                                     <option value="alta">Alta</option>
@@ -141,7 +141,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="delivery-time">Prazo Desejado</label>
-                                <input type="datetime-local" id="delivery-time">
+                                <input type="datetime-local" id="delivery-time" name="delivery-time">
                             </div>
                         </div>
                         
@@ -186,22 +186,22 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="drone-name">Nome/ID do Drone</label>
-                                <input type="text" id="drone-name" required>
+                                <input type="text" id="drone-name" name="drone-name" required>
                             </div>
                             <div class="form-group">
                                 <label for="drone-capacity">Capacidade (kg)</label>
-                                <input type="number" id="drone-capacity" min="1" max="50" value="10" required>
+                                <input type="number" id="drone-capacity" name="drone-capacity" min="1" max="50" value="10" required>
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="drone-range">Alcance (km)</label>
-                                <input type="number" id="drone-range" min="10" max="200" value="50" required>
+                                <input type="number" id="drone-range" name="drone-range" min="10" max="200" value="50" required>
                             </div>
                             <div class="form-group">
                                 <label for="drone-speed">Velocidade (km/h)</label>
-                                <input type="number" id="drone-speed" min="30" max="120" value="60" required>
+                                <input type="number" id="drone-speed" name="drone-speed" min="30" max="120" value="60" required>
                             </div>
                         </div>
                         
@@ -360,18 +360,29 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts - Order is important for dependencies -->
+    <!-- External libraries first -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Utilities (no dependencies) -->
     <script src="src/js/utils/calculations.js"></script>
     <script src="src/js/utils/validators.js"></script>
+    
+    <!-- Models (depend on utilities) -->
     <script src="src/js/models/Order.js"></script>
     <script src="src/js/models/Drone.js"></script>
     <script src="src/js/models/SimulationEngine.js"></script>
+    
+    <!-- Services (depend on models and utilities) -->
     <script src="src/js/services/DroneService.js"></script>
     <script src="src/js/services/OrderService.js"></script>
     <script src="src/js/services/OptimizationService.js"></script>
+    
+    <!-- Controllers (depend on all above) -->
     <script src="src/js/controllers/SimulationController.js"></script>
+    
+    <!-- Main application file (depends on everything) -->
     <script src="src/js/main.js"></script>
 </body>
 </html>
